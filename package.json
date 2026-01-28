@@ -1,0 +1,102 @@
+{
+  "name": "@digitaldefiance/branded-enum",
+  "version": "0.0.1",
+  "description": "Runtime-identifiable enum-like types for TypeScript with zero runtime overhead",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "!**/*.tsbuildinfo"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Digital-Defiance/branded-enum.git"
+  },
+  "keywords": [
+    "typescript",
+    "enum",
+    "branded",
+    "type-safe",
+    "runtime"
+  ],
+  "author": "Digital Defiance, Jessica Mulein",
+  "bugs": {
+    "url": "https://github.com/Digital-Defiance/branded-enum/issues"
+  },
+  "homepage": "https://github.com/Digital-Defiance/branded-enum#readme",
+  "scripts": {
+    "build": "nx build branded-enum",
+    "build:examples": "nx build-examples branded-enum",
+    "test": "nx test branded-enum",
+    "lint": "nx lint branded-enum"
+  },
+  "devDependencies": {
+    "@nx/jest": "22.4.2",
+    "@nx/js": "22.4.2",
+    "@swc-node/register": "~1.9.1",
+    "@swc/cli": "~0.6.0",
+    "@swc/core": "~1.5.7",
+    "@swc/helpers": "~0.5.11",
+    "@swc/jest": "~0.2.38",
+    "@types/jest": "^30.0.0",
+    "@types/node": "20.19.9",
+    "fast-check": "^4.5.3",
+    "jest": "^30.0.2",
+    "jest-environment-node": "^30.0.2",
+    "jest-util": "^30.0.2",
+    "nx": "22.4.2",
+    "prettier": "~3.6.2",
+    "ts-jest": "^29.4.0",
+    "ts-node": "10.9.1",
+    "tslib": "^2.3.0",
+    "typescript": "~5.9.2"
+  },
+  "packageManager": "yarn@4.12.0",
+  "nx": {
+    "name": "branded-enum",
+    "sourceRoot": "src",
+    "targets": {
+      "build": {
+        "executor": "@nx/js:swc",
+        "outputs": ["{options.outputPath}"],
+        "options": {
+          "outputPath": "dist",
+          "main": "src/index.ts",
+          "tsConfig": "tsconfig.lib.json",
+          "skipTypeCheck": true,
+          "stripLeadingPaths": true
+        }
+      },
+      "test": {
+        "executor": "@nx/jest:jest",
+        "outputs": ["{projectRoot}/test-output/jest/coverage"],
+        "options": {
+          "jestConfig": "jest.config.cts",
+          "passWithNoTests": true
+        }
+      },
+      "build-examples": {
+        "executor": "nx:run-commands",
+        "outputs": ["{projectRoot}/examples/dist"],
+        "options": {
+          "command": "tsc -p examples/tsconfig.json"
+        },
+        "dependsOn": ["build"]
+      }
+    }
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
