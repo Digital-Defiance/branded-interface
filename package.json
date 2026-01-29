@@ -1,18 +1,19 @@
 {
   "name": "@digitaldefiance/branded-enum",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Runtime-identifiable enum-like types for TypeScript with zero runtime overhead",
   "license": "MIT",
   "type": "module",
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/cjs/index.cjs",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/esm/index.d.ts",
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "default": "./dist/index.js"
+      "types": "./dist/esm/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.cjs",
+      "default": "./dist/esm/index.js"
     }
   },
   "files": [
@@ -75,7 +76,8 @@
         ],
         "options": {
           "commands": [
-            "swc src -d dist --config-file .swcrc --strip-leading-paths",
+            "swc src -d dist/esm --config-file .swcrc --strip-leading-paths",
+            "swc src -d dist/cjs --config-file .swcrc.cjs --strip-leading-paths -C module.type=commonjs --out-file-extension cjs",
             "tsc -p tsconfig.lib.json"
           ],
           "cwd": "{projectRoot}",
