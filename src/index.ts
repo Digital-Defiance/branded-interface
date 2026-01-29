@@ -41,6 +41,7 @@ export {
   getAllEnumIds,
   getEnumById,
   findEnumSources,
+  resetRegistry,
 } from './lib/registry.js';
 
 // =============================================================================

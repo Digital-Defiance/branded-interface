@@ -160,3 +160,31 @@ export function findEnumSources(value: string): string[] {
   const enumIds = registry.valueIndex.get(value);
   return enumIds ? Array.from(enumIds) : [];
 }
+
+/**
+ * Resets the global branded enum registry, clearing all registered enums.
+ *
+ * **WARNING**: This function is intended for testing purposes only.
+ * Using it in production code will break any code that depends on
+ * previously registered enums.
+ *
+ * Clears all entries from:
+ * - The enums map (ID -> enum object)
+ * - The value index (value -> set of enum IDs)
+ *
+ * @example
+ * // In test setup/teardown
+ * beforeEach(() => {
+ *   resetRegistry();
+ * });
+ *
+ * @example
+ * // Clear and verify
+ * resetRegistry();
+ * getAllEnumIds(); // []
+ */
+export function resetRegistry(): void {
+  const registry = getRegistry();
+  registry.enums.clear();
+  registry.valueIndex.clear();
+}

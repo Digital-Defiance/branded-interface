@@ -246,6 +246,24 @@ Finds all enum IDs that contain a given value.
 function findEnumSources(value: string): string[]
 ```
 
+#### `resetRegistry()`
+
+Resets the global branded enum registry, clearing all registered enums. **Warning:** This is intended for testing purposes only.
+
+```typescript
+function resetRegistry(): void
+```
+
+**Example (Jest/Vitest):**
+
+```typescript
+import { resetRegistry } from '@digitaldefiance/branded-enum';
+
+beforeEach(() => {
+  resetRegistry();
+});
+```
+
 ### Utility Functions
 
 #### `hasValue(enumObj, value)`

@@ -11,6 +11,7 @@ import {
   getAllEnumIds,
   getEnumById,
   findEnumSources,
+  resetRegistry,
 } from './registry.js';
 import { BrandedEnum, ENUM_ID, ENUM_VALUES, REGISTRY_KEY } from './types.js';
 
@@ -313,6 +314,225 @@ describe('Feature: branded-enum, Property 3: Find Enum Sources Correctness', () 
           expect(foundIds.sort()).toEqual(uniqueIds.sort());
         }
       ),
+      { numRuns: 100 }
+    );
+  });
+});
+
+describe('Feature: branded-enum, Property 7: Registry Reset', () => {
+  /**
+   * **Validates: resetRegistry functionality**
+   *
+   * *For any* set of registered enums:
+   * - `resetRegistry()` clears all registered enums
+   * - `getAllEnumIds()` returns empty array after reset
+   * - `getEnumById(id)` returns undefined for previously registered IDs
+   * - `findEnumSources(value)` returns empty array for previously registered values
+   * - New enums can be registered after reset
+   */
+
+  beforeEach(() => {
+    clearRegistry();
+  });
+
+  it('resetRegistry clears all registered enums', () => {
+    fc.assert(
+      fc.property(
+        fc.array(fc.tuple(enumIdArb, valuesObjectArb), {
+          minLength: 1,
+          maxLength: 5,
+        }),
+        (enumSpecs) => {
+          clearRegistry();
+
+          // Make IDs unique by appending index
+          const uniqueSpecs = enumSpecs.map(([id, values], idx) => [
+            `${id}_${idx}`,
+            values,
+          ]) as [string, Record<string, string>][];
+
+          // Register all enums
+          for (const [id, values] of uniqueSpecs) {
+            const enumObj = createTestBrandedEnum(id, values);
+            registerEnum(enumObj);
+          }
+
+          // Verify enums are registered
+          expect(getAllEnumIds().length).toBeGreaterThan(0);
+
+          // Reset the registry
+          resetRegistry();
+
+          // Verify all enums are cleared
+          expect(getAllEnumIds()).toEqual([]);
+        }
+      ),
+      { numRuns: 100 }
+    );
+  });
+
+  it('getEnumById returns undefined after resetRegistry', () => {
+    fc.assert(
+      fc.property(
+        fc.array(fc.tuple(enumIdArb, valuesObjectArb), {
+          minLength: 1,
+          maxLength: 5,
+        }),
+        (enumSpecs) => {
+          clearRegistry();
+
+          // Make IDs unique by appending index
+          const uniqueSpecs = enumSpecs.map(([id, values], idx) => [
+            `${id}_${idx}`,
+            values,
+          ]) as [string, Record<string, string>][];
+
+          // Register all enums and collect IDs
+          const registeredIds: string[] = [];
+          for (const [id, values] of uniqueSpecs) {
+            const enumObj = createTestBrandedEnum(id, values);
+            registerEnum(enumObj);
+            registeredIds.push(id);
+          }
+
+          // Verify enums can be retrieved before reset
+          for (const id of registeredIds) {
+            expect(getEnumById(id)).toBeDefined();
+          }
+
+          // Reset the registry
+          resetRegistry();
+
+          // Verify all enums return undefined after reset
+          for (const id of registeredIds) {
+            expect(getEnumById(id)).toBeUndefined();
+          }
+        }
+      ),
+      { numRuns: 100 }
+    );
+  });
+
+  it('findEnumSources returns empty array after resetRegistry', () => {
+    fc.assert(
+      fc.property(
+        fc.array(fc.tuple(enumIdArb, valuesObjectArb), {
+          minLength: 1,
+          maxLength: 5,
+        }),
+        (enumSpecs) => {
+          clearRegistry();
+
+          // Make IDs unique by appending index
+          const uniqueSpecs = enumSpecs.map(([id, values], idx) => [
+            `${id}_${idx}`,
+            values,
+          ]) as [string, Record<string, string>][];
+
+          // Register all enums and collect values
+          const allValues = new Set<string>();
+          for (const [id, values] of uniqueSpecs) {
+            const enumObj = createTestBrandedEnum(id, values);
+            registerEnum(enumObj);
+            Object.values(values).forEach((v) => allValues.add(v));
+          }
+
+          // Verify values can be found before reset
+          for (const value of allValues) {
+            expect(findEnumSources(value).length).toBeGreaterThan(0);
+          }
+
+          // Reset the registry
+          resetRegistry();
+
+          // Verify all values return empty array after reset
+          for (const value of allValues) {
+            expect(findEnumSources(value)).toEqual([]);
+          }
+        }
+      ),
+      { numRuns: 100 }
+    );
+  });
+
+  it('allows registering new enums after resetRegistry', () => {
+    fc.assert(
+      fc.property(
+        fc.tuple(
+          fc.array(fc.tuple(enumIdArb, valuesObjectArb), {
+            minLength: 1,
+            maxLength: 3,
+          }),
+          fc.array(fc.tuple(enumIdArb, valuesObjectArb), {
+            minLength: 1,
+            maxLength: 3,
+          })
+        ),
+        ([firstBatch, secondBatch]) => {
+          clearRegistry();
+
+          // Make IDs unique for first batch
+          const firstSpecs = firstBatch.map(([id, values], idx) => [
+            `first_${id}_${idx}`,
+            values,
+          ]) as [string, Record<string, string>][];
+
+          // Register first batch
+          for (const [id, values] of firstSpecs) {
+            const enumObj = createTestBrandedEnum(id, values);
+            registerEnum(enumObj);
+          }
+
+          // Reset the registry
+          resetRegistry();
+
+          // Make IDs unique for second batch
+          const secondSpecs = secondBatch.map(([id, values], idx) => [
+            `second_${id}_${idx}`,
+            values,
+          ]) as [string, Record<string, string>][];
+
+          // Register second batch - should succeed
+          const secondIds: string[] = [];
+          for (const [id, values] of secondSpecs) {
+            const enumObj = createTestBrandedEnum(id, values);
+            registerEnum(enumObj);
+            secondIds.push(id);
+          }
+
+          // Verify only second batch is registered
+          const allIds = getAllEnumIds();
+          expect(allIds.sort()).toEqual(secondIds.sort());
+        }
+      ),
+      { numRuns: 100 }
+    );
+  });
+
+  it('allows re-registering same ID after resetRegistry', () => {
+    fc.assert(
+      fc.property(fc.tuple(enumIdArb, valuesObjectArb), ([enumId, values]) => {
+        clearRegistry();
+
+        const uniqueId = `reregister_${enumId}`;
+
+        // Register enum
+        const enumObj1 = createTestBrandedEnum(uniqueId, values);
+        registerEnum(enumObj1);
+
+        // Verify it's registered
+        expect(getEnumById(uniqueId)).toBe(enumObj1);
+
+        // Reset the registry
+        resetRegistry();
+
+        // Re-register with same ID - should succeed (no duplicate error)
+        const enumObj2 = createTestBrandedEnum(uniqueId, values);
+        expect(() => registerEnum(enumObj2)).not.toThrow();
+
+        // Verify new enum is registered
+        expect(getEnumById(uniqueId)).toBe(enumObj2);
+      }),
       { numRuns: 100 }
     );
   });
