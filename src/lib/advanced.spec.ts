@@ -188,18 +188,17 @@ describe('enumSubset', () => {
       }).toThrow('Key "NonExistent" does not exist in enum "source-invalid-key"');
     });
 
-    it('throws when newId is already registered', () => {
+    it('returns existing enum when newId is already registered', () => {
       const Source = createBrandedEnum('source-dup-id', {
         A: 'a',
       } as const);
 
       // Create first subset
-      enumSubset('duplicate-id', Source, ['A']);
+      const first = enumSubset('duplicate-id', Source, ['A']);
 
-      // Try to create another with the same ID
-      expect(() => {
-        enumSubset('duplicate-id', Source, ['A']);
-      }).toThrow('Branded enum with ID "duplicate-id" already exists');
+      // Creating another with the same ID should return the existing one
+      const second = enumSubset('duplicate-id', Source, ['A']);
+      expect(second).toBe(first);
     });
   });
 
@@ -431,19 +430,18 @@ describe('enumExclude', () => {
       }).toThrow('Key "NonExistent" does not exist in enum "source-invalid-key-exc"');
     });
 
-    it('throws when newId is already registered', () => {
+    it('returns existing enum when newId is already registered', () => {
       const Source = createBrandedEnum('source-dup-id-exc', {
         A: 'a',
         B: 'b',
       } as const);
 
       // Create first excluded enum
-      enumExclude('duplicate-id-exc', Source, ['A']);
+      const first = enumExclude('duplicate-id-exc', Source, ['A']);
 
-      // Try to create another with the same ID
-      expect(() => {
-        enumExclude('duplicate-id-exc', Source, ['B']);
-      }).toThrow('Branded enum with ID "duplicate-id-exc" already exists');
+      // Creating another with the same ID should return the existing one
+      const second = enumExclude('duplicate-id-exc', Source, ['B']);
+      expect(second).toBe(first);
     });
   });
 
@@ -683,18 +681,17 @@ describe('enumMap', () => {
       }).toThrow('enumMap mapper must return a string');
     });
 
-    it('throws when newId is already registered', () => {
+    it('returns existing enum when newId is already registered', () => {
       const Source = createBrandedEnum('source-dup-id-map', {
         A: 'a',
       } as const);
 
       // Create first mapped enum
-      enumMap('duplicate-id-map', Source, (v) => v);
+      const first = enumMap('duplicate-id-map', Source, (v) => v);
 
-      // Try to create another with the same ID
-      expect(() => {
-        enumMap('duplicate-id-map', Source, (v) => v.toUpperCase());
-      }).toThrow('Branded enum with ID "duplicate-id-map" already exists');
+      // Creating another with the same ID should return the existing one
+      const second = enumMap('duplicate-id-map', Source, (v) => v.toUpperCase());
+      expect(second).toBe(first);
     });
   });
 
@@ -887,12 +884,12 @@ describe('enumFromKeys', () => {
       }).toThrow('enumFromKeys: duplicate key "A" found');
     });
 
-    it('throws when enumId is already registered', () => {
-      enumFromKeys('duplicate-id-from-keys', ['A'] as const);
+    it('returns existing enum when enumId is already registered', () => {
+      const first = enumFromKeys('duplicate-id-from-keys', ['A'] as const);
 
-      expect(() => {
-        enumFromKeys('duplicate-id-from-keys', ['B'] as const);
-      }).toThrow('Branded enum with ID "duplicate-id-from-keys" already exists');
+      // Creating another with the same ID should return the existing one
+      const second = enumFromKeys('duplicate-id-from-keys', ['B'] as const);
+      expect(second).toBe(first);
     });
   });
 

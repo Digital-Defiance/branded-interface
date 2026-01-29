@@ -1,6 +1,6 @@
 {
   "name": "@digitaldefiance/branded-enum",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Runtime-identifiable enum-like types for TypeScript with zero runtime overhead",
   "license": "MIT",
   "type": "module",

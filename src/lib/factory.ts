@@ -11,7 +11,7 @@ import {
   ENUM_ID,
   ENUM_VALUES,
 } from './types.js';
-import { registerEnum } from './registry.js';
+import { getRegistry, registerEnum } from './registry.js';
 
 /**
  * Creates a branded enum with runtime metadata.
@@ -22,14 +22,17 @@ import { registerEnum } from './registry.js';
  * - Is frozen to prevent modification
  * - Is registered in the global registry
  *
+ * This function is idempotent - if an enum with the same ID already exists,
+ * the existing enum is returned instead of creating a new one. This enables
+ * safe usage in module-scoped code that may be re-executed in test environments
+ * or hot-reload scenarios.
+ *
  * @template T - The shape of the values object (use `as const` for literal types)
  * @param enumId - Unique identifier for this enum. Must be unique across all
  *   branded enums in the application.
  * @param values - Object containing key-value pairs where keys are enum member
  *   names and values are the string values. Use `as const` for literal type inference.
  * @returns A frozen branded enum object with attached metadata
- * @throws {Error} Throws `Error` with message `Branded enum with ID "${enumId}" already exists`
- *   if an enum with the same ID has already been registered.
  *
  * @example
  * // Basic usage
@@ -52,14 +55,22 @@ import { registerEnum } from './registry.js';
  * type ColorValue = typeof Colors[keyof typeof Colors]; // 'red' | 'green' | 'blue'
  *
  * @example
- * // Error handling for duplicate IDs
- * createBrandedEnum('myEnum', { A: 'a' } as const);
- * createBrandedEnum('myEnum', { B: 'b' } as const); // Throws Error
+ * // Safe re-registration (idempotent)
+ * const Enum1 = createBrandedEnum('myEnum', { A: 'a' } as const);
+ * const Enum2 = createBrandedEnum('myEnum', { A: 'a' } as const);
+ * // Enum1 === Enum2 (same reference)
  */
 export function createBrandedEnum<T extends Record<string, string>>(
   enumId: string,
   values: T
 ): BrandedEnum<T> {
+  // Check if already registered - return existing enum (idempotent)
+  const registry = getRegistry();
+  const existing = registry.enums.get(enumId);
+  if (existing) {
+    return existing.enumObj as BrandedEnum<T>;
+  }
+
   // Create the enum object with user values
   const enumObj = { ...values } as T & BrandedEnumMetadata;
 

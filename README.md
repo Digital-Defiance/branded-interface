@@ -159,8 +159,7 @@ function createBrandedEnum<T extends Record<string, string>>(
 
 - **enumId**: Unique identifier for this enum
 - **values**: Object with key-value pairs (use `as const` for literal types)
-- **Returns**: Frozen branded enum object
-- **Throws**: `Error` if enumId is already registered
+- **Returns**: Frozen branded enum object (returns existing enum if ID already registered)
 
 ### Type Guards
 

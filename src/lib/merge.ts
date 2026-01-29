@@ -44,15 +44,14 @@ function isBrandedEnum(obj: unknown): obj is AnyBrandedEnum {
  * - Duplicate values (same value in multiple enums) are allowed
  *
  * @template T - Tuple of branded enum types being merged
- * @param newId - Unique identifier for the merged enum. Must not already
- *   be registered.
+ * @param newId - Unique identifier for the merged enum. If already registered,
+ *   returns the existing enum (idempotent behavior).
  * @param enums - One or more branded enums to merge
- * @returns A new branded enum containing all values from source enums
+ * @returns A new branded enum containing all values from source enums,
+ *   or the existing enum if newId is already registered
  * @throws {Error} Throws `Error` with message
  *   `Cannot merge enums: duplicate key "${key}" found in enums "${enumId1}" and "${enumId2}"`
  *   if the same key exists in multiple source enums.
- * @throws {Error} Throws `Error` with message
- *   `Branded enum with ID "${newId}" already exists` if newId is already registered.
  * @throws {Error} Throws `Error` with message `All arguments must be branded enums`
  *   if any argument is not a valid branded enum.
  *

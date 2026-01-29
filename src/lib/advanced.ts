@@ -35,18 +35,18 @@ function isBrandedEnum(obj: unknown): obj is AnyBrandedEnum {
  *
  * @template E - The source branded enum type
  * @template K - The keys to include in the subset (must be keys of E)
- * @param newId - Unique identifier for the new subset enum. Must not already be registered.
+ * @param newId - Unique identifier for the new subset enum. If already registered,
+ *   returns the existing enum (idempotent behavior).
  * @param sourceEnum - The branded enum to derive the subset from
  * @param keys - Array of keys to include in the subset. All keys must exist in sourceEnum.
- * @returns A new branded enum containing only the specified key-value pairs
+ * @returns A new branded enum containing only the specified key-value pairs,
+ *   or the existing enum if newId is already registered
  * @throws {Error} Throws `Error` with message `enumSubset requires a branded enum as the source`
  *   if sourceEnum is not a valid branded enum.
  * @throws {Error} Throws `Error` with message `enumSubset requires at least one key`
  *   if keys array is empty.
  * @throws {Error} Throws `Error` with message `Key "${key}" does not exist in enum "${enumId}"`
  *   if any specified key does not exist in the source enum.
- * @throws {Error} Throws `Error` with message `Branded enum with ID "${newId}" already exists`
- *   if newId is already registered.
  *
  * @example
  * // Basic usage - create a subset of colors
@@ -139,18 +139,18 @@ export function enumSubset<
  *
  * @template E - The source branded enum type
  * @template K - The keys to exclude from the result (must be keys of E)
- * @param newId - Unique identifier for the new enum. Must not already be registered.
+ * @param newId - Unique identifier for the new enum. If already registered,
+ *   returns the existing enum (idempotent behavior).
  * @param sourceEnum - The branded enum to derive from
  * @param keysToExclude - Array of keys to exclude. All keys must exist in sourceEnum.
- * @returns A new branded enum containing all key-value pairs except the excluded ones
+ * @returns A new branded enum containing all key-value pairs except the excluded ones,
+ *   or the existing enum if newId is already registered
  * @throws {Error} Throws `Error` with message `enumExclude requires a branded enum as the source`
  *   if sourceEnum is not a valid branded enum.
  * @throws {Error} Throws `Error` with message `enumExclude: excluding all keys would result in an empty enum`
  *   if excluding all keys would leave no keys remaining.
  * @throws {Error} Throws `Error` with message `Key "${key}" does not exist in enum "${enumId}"`
  *   if any specified key to exclude does not exist in the source enum.
- * @throws {Error} Throws `Error` with message `Branded enum with ID "${newId}" already exists`
- *   if newId is already registered.
  *
  * @example
  * // Basic usage - exclude specific colors
@@ -265,17 +265,17 @@ type MappedEnumValues<E extends Record<string, string>> = {
  * The resulting enum is registered as an independent enum in the global registry.
  *
  * @template E - The source branded enum type
- * @param newId - Unique identifier for the new enum. Must not already be registered.
+ * @param newId - Unique identifier for the new enum. If already registered,
+ *   returns the existing enum (idempotent behavior).
  * @param sourceEnum - The branded enum to derive from
  * @param mapper - Function that transforms each value. Receives the original value
  *   and the key, and returns the transformed value.
- * @returns A new branded enum with transformed values
+ * @returns A new branded enum with transformed values,
+ *   or the existing enum if newId is already registered
  * @throws {Error} Throws `Error` with message `enumMap requires a branded enum as the source`
  *   if sourceEnum is not a valid branded enum.
  * @throws {Error} Throws `Error` with message `enumMap mapper must return a string`
  *   if the mapper function returns a non-string value.
- * @throws {Error} Throws `Error` with message `Branded enum with ID "${newId}" already exists`
- *   if newId is already registered.
  *
  * @example
  * // Prefix all values with a namespace
@@ -366,18 +366,18 @@ type KeysAsValues<K extends readonly string[]> = {
  * types of the provided keys.
  *
  * @template K - The array of string keys (use `as const` for literal types)
- * @param enumId - Unique identifier for the new enum. Must not already be registered.
+ * @param enumId - Unique identifier for the new enum. If already registered,
+ *   returns the existing enum (idempotent behavior).
  * @param keys - Array of strings that will become both keys and values.
  *   Use `as const` for literal type inference.
- * @returns A new branded enum where each key maps to itself
+ * @returns A new branded enum where each key maps to itself,
+ *   or the existing enum if enumId is already registered
  * @throws {Error} Throws `Error` with message `enumFromKeys requires at least one key`
  *   if keys array is empty.
  * @throws {Error} Throws `Error` with message `enumFromKeys requires all keys to be non-empty strings`
  *   if any key is not a non-empty string.
  * @throws {Error} Throws `Error` with message `enumFromKeys: duplicate key "${key}" found`
  *   if the keys array contains duplicates.
- * @throws {Error} Throws `Error` with message `Branded enum with ID "${enumId}" already exists`
- *   if enumId is already registered.
  *
  * @example
  * // Basic usage - create enum from string array

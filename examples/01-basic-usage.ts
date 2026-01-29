@@ -110,17 +110,19 @@ console.log('\n=== Type Inference Demo ===');
 console.log('GoodEnum.A:', GoodEnum.A); // 'a' (literal type)
 
 // =============================================================================
-// Error Handling: Duplicate IDs
+// Idempotent Behavior: Duplicate IDs Return Existing Enum
 // =============================================================================
 
-console.log('\n=== Error Handling ===');
+console.log('\n=== Idempotent Behavior ===');
 
-try {
-  // This will throw because 'status' is already registered
-  createBrandedEnum('status', { Test: 'test' } as const);
-} catch (error) {
-  console.log('Expected error:', (error as Error).message);
-  // 'Branded enum with ID "status" already exists'
-}
+// Creating an enum with an existing ID returns the same enum (idempotent)
+// This is useful for module-scoped enums that may be re-imported in test environments
+const Status2 = createBrandedEnum('status', {
+  Active: 'active',
+  Inactive: 'inactive',
+  Pending: 'pending',
+} as const);
+console.log('Status === Status2:', Status === Status2); // true
+console.log('This is useful for module-scoped enums that may be re-imported');
 
 console.log('\n✅ Example completed successfully!');

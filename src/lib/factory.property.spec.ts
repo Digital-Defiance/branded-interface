@@ -156,19 +156,20 @@ describe('Feature: branded-enum, Property 1: Enum Creation Correctness', () => {
 });
 
 
-describe('Feature: branded-enum, Property 5: Duplicate ID Rejection', () => {
+describe('Feature: branded-enum, Property 5: Duplicate ID Handling (Idempotent)', () => {
   /**
    * **Validates: Requirements 5.2**
    *
    * *For any* enum ID that has already been used to create a branded enum:
-   * - Attempting to create another branded enum with the same ID SHALL throw an error
+   * - Attempting to create another branded enum with the same ID SHALL return the existing enum
+   * - This enables safe usage in module-scoped code that may be re-executed in test environments
    */
 
   beforeEach(() => {
     clearRegistry();
   });
 
-  it('throws an error when creating an enum with a duplicate ID', () => {
+  it('returns the existing enum when creating an enum with a duplicate ID', () => {
     fc.assert(
       fc.property(
         fc.tuple(enumIdArb, valuesObjectArb, valuesObjectArb),
@@ -176,12 +177,11 @@ describe('Feature: branded-enum, Property 5: Duplicate ID Rejection', () => {
           clearRegistry();
 
           // Create first enum
-          createBrandedEnum(enumId, values1);
+          const enum1 = createBrandedEnum(enumId, values1);
 
-          // Attempting to create second enum with same ID should throw
-          expect(() => createBrandedEnum(enumId, values2)).toThrow(
-            `Branded enum with ID "${enumId}" already exists`
-          );
+          // Creating second enum with same ID should return the existing one
+          const enum2 = createBrandedEnum(enumId, values2);
+          expect(enum2).toBe(enum1);
         }
       ),
       { numRuns: 100 }
