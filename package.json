@@ -1,10 +1,10 @@
 {
   "name": "@digitaldefiance/branded-enum",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Runtime-identifiable enum-like types for TypeScript with zero runtime overhead",
   "license": "MIT",
   "type": "module",
-  "main": "./dist/cjs/index.cjs",
+  "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "types": "./dist/esm/index.d.ts",
   "exports": {
@@ -12,7 +12,7 @@
     ".": {
       "types": "./dist/esm/index.d.ts",
       "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.cjs",
+      "require": "./dist/cjs/index.js",
       "default": "./dist/esm/index.js"
     }
   },
@@ -77,8 +77,9 @@
         "options": {
           "commands": [
             "swc src -d dist/esm --config-file .swcrc --strip-leading-paths",
-            "swc src -d dist/cjs --config-file .swcrc.cjs --strip-leading-paths -C module.type=commonjs --out-file-extension cjs",
-            "tsc -p tsconfig.lib.json"
+            "swc src -d dist/cjs --config-file .swcrc.cjs --strip-leading-paths -C module.type=commonjs",
+            "tsc -p tsconfig.lib.json",
+            "echo '{\"type\": \"commonjs\"}' > dist/cjs/package.json"
           ],
           "cwd": "{projectRoot}",
           "parallel": false
