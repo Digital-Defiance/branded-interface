@@ -9,13 +9,13 @@
  * Symbol key for storing the enum ID metadata.
  * Using a Symbol prevents collision with user-defined keys.
  */
-export const ENUM_ID: unique symbol = Symbol('ENUM_ID');
+export const ENUM_ID: unique symbol = Symbol.for('@digitaldefiance/branded-enum:ENUM_ID');
 
 /**
  * Symbol key for storing the enum values Set.
  * Using a Symbol prevents collision with user-defined keys.
  */
-export const ENUM_VALUES: unique symbol = Symbol('ENUM_VALUES');
+export const ENUM_VALUES: unique symbol = Symbol.for('@digitaldefiance/branded-enum:ENUM_VALUES');
 
 /**
  * Metadata attached to branded enums via Symbol properties.

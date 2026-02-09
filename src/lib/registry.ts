@@ -47,19 +47,25 @@ export function getRegistry(): BrandedEnumRegistry {
  * Registers a branded enum in the global registry.
  * Also updates the value index for reverse lookups.
  *
+ * This function is idempotent - if an enum with the same ID is already
+ * registered, it returns the existing entry instead of throwing an error.
+ * This enables safe usage in module-scoped code that may be re-executed
+ * in test environments or hot-reload scenarios.
+ *
  * @param enumObj - The branded enum to register
- * @throws Error if an enum with the same ID is already registered
+ * @returns The registered entry (either new or existing)
  */
 export function registerEnum<T extends Record<string, string>>(
   enumObj: BrandedEnum<T>
-): void {
+): RegistryEntry {
   const registry = getRegistry();
   const enumId = enumObj[ENUM_ID];
   const values = enumObj[ENUM_VALUES];
 
-  // Check for duplicate ID
-  if (registry.enums.has(enumId)) {
-    throw new Error(`Branded enum with ID "${enumId}" already exists`);
+  // If already registered, return existing entry (idempotent)
+  const existing = registry.enums.get(enumId);
+  if (existing) {
+    return existing;
   }
 
   // Create registry entry
@@ -81,6 +87,8 @@ export function registerEnum<T extends Record<string, string>>(
     }
     enumIds.add(enumId);
   }
+
+  return entry;
 }
 
 /**
