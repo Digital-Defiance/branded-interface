@@ -1,5 +1,8 @@
 # @digitaldefiance/branded-interface
 
+[![npm version](https://badge.fury.io/js/%40digitaldefiance%2Fbranded-interface.svg)](https://www.npmjs.com/package/@digitaldefiance/branded-interface)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 Runtime-identifiable interface-like types for TypeScript with zero runtime overhead.
 
 ## Why branded-interface?
