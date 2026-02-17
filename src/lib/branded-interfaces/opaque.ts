@@ -18,7 +18,7 @@ import { getInterfaceById, registerInterfaceEntry } from './registry.js';
  */
 export function createOpaqueType<T>(
   typeId: string,
-  baseType: string
+  _baseType: string
 ): OpaqueTypeDefinition<T> {
   // Idempotent: return existing definition if already registered
   const existing = getInterfaceById(typeId);

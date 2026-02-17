@@ -9,7 +9,6 @@ import * as fc from 'fast-check';
 import { partialInterface, pickFields, omitFields } from '../compose.js';
 import { createBrandedInterface } from '../factory.js';
 import { resetInterfaceRegistry } from '../registry.js';
-import type { InterfaceSchema } from '../types.js';
 import { arbUniqueId, arbInterfaceSchema } from './arbitraries.js';
 
 // =============================================================================

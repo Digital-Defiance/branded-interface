@@ -7,7 +7,6 @@
 
 import {
   INTERFACE_ID,
-  PRIMITIVE_ID,
   BrandedInterfaceDefinition,
   BrandedInstance,
   BrandedPrimitiveDefinition,

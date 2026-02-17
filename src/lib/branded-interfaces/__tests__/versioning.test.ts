@@ -5,11 +5,6 @@ import { resetInterfaceRegistry } from '../registry.js';
 import { INTERFACE_VERSION } from '../types.js';
 import { arbUniqueId } from './arbitraries.js';
 
-let idCounter = 0;
-function uniqueId(prefix = 'Version'): string {
-  return `${prefix}_${Date.now()}_${idCounter++}`;
-}
-
 beforeEach(() => {
   resetInterfaceRegistry();
   resetMigrationRegistry();

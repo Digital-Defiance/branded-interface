@@ -14,7 +14,6 @@ import {
   getInterfaceFields,
   interfaceFieldCount,
 } from '../accessors.js';
-import { INTERFACE_ID } from '../types.js';
 import {
   arbUniqueId,
   arbInterfaceSchema,

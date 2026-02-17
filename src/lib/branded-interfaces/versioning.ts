@@ -12,7 +12,6 @@ import {
   MigrationFn,
   MigrationEntry,
   INTERFACE_ID,
-  INTERFACE_VERSION,
 } from './types.js';
 
 import { getInterfaceById } from './registry.js';

@@ -189,7 +189,7 @@ describe('createCodec', () => {
 });
 
 import * as fc from 'fast-check';
-import { arbUniqueId, arbInterfaceSchema, arbMatchingData } from './arbitraries.js';
+import { arbUniqueId } from './arbitraries.js';
 
 // =============================================================================
 // Property 36: Codec pipeline execution order and error handling
