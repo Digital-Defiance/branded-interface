@@ -1,6 +1,6 @@
 {
   "name": "@digitaldefiance/branded-interface",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Runtime-identifiable interface-like types for TypeScript with zero runtime overhead",
   "license": "MIT",
   "type": "module",
