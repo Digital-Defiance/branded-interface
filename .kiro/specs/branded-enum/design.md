@@ -1,8 +1,8 @@
-# Design Document: branded-enum
+# Design Document: branded-interface
 
 ## Overview
 
-The branded-enum library provides a mechanism for creating runtime-identifiable enum-like types in TypeScript. Unlike standard TypeScript enums which are erased at compile time, branded enums carry metadata that enables runtime identification of which enum a value belongs to.
+The branded-interface library provides a mechanism for creating runtime-identifiable enum-like types in TypeScript. Unlike standard TypeScript enums which are erased at compile time, branded enums carry metadata that enables runtime identification of which enum a value belongs to.
 
 The library uses a factory pattern to create enum objects with hidden metadata properties, a global registry for cross-bundle tracking, and type guards for safe type narrowing. Values remain raw strings for serialization compatibility while metadata is stored in non-enumerable properties.
 
@@ -16,7 +16,7 @@ graph TB
         MA[Metadata Accessors]
     end
     
-    subgraph "branded-enum Library"
+    subgraph "branded-interface Library"
         BEF[BrandedEnumFactory]
         REG[GlobalRegistry]
         UTILS[Utility Functions]
@@ -476,12 +476,12 @@ The library uses both unit tests and property-based tests for comprehensive cove
 
 - **Library**: fast-check (already in devDependencies)
 - **Minimum iterations**: 100 per property test
-- **Tag format**: `Feature: branded-enum, Property {number}: {property_text}`
+- **Tag format**: `Feature: branded-interface, Property {number}: {property_text}`
 
 ### Test File Structure
 
 ```
-branded-enum/
+branded-interface/
 ├── src/
 │   ├── index.ts              # Main exports
 │   ├── factory.ts            # createBrandedEnum implementation

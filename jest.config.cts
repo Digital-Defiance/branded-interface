@@ -10,7 +10,7 @@ const swcJestConfig = JSON.parse(
 swcJestConfig.swcrc = false;
 
 module.exports = {
-  displayName: '@digitaldefiance/branded-enum',
+  displayName: '@digitaldefiance/branded-interface',
   preset: './jest.preset.cjs',
   testEnvironment: 'node',
   transform: {

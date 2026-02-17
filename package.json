@@ -1,7 +1,7 @@
 {
-  "name": "@digitaldefiance/branded-enum",
-  "version": "0.0.7",
-  "description": "Runtime-identifiable enum-like types for TypeScript with zero runtime overhead",
+  "name": "@digitaldefiance/branded-interface",
+  "version": "0.0.1",
+  "description": "Runtime-identifiable interface-like types for TypeScript with zero runtime overhead",
   "license": "MIT",
   "type": "module",
   "main": "./dist/cjs/index.js",
@@ -22,28 +22,29 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Digital-Defiance/branded-enum.git"
+    "url": "git+https://github.com/Digital-Defiance/branded-interface.git"
   },
   "keywords": [
     "typescript",
-    "enum",
+    "interface",
     "branded",
     "type-safe",
     "runtime"
   ],
   "author": "Digital Defiance, Jessica Mulein",
   "bugs": {
-    "url": "https://github.com/Digital-Defiance/branded-enum/issues"
+    "url": "https://github.com/Digital-Defiance/branded-interface/issues"
   },
-  "homepage": "https://github.com/Digital-Defiance/branded-enum#readme",
+  "homepage": "https://github.com/Digital-Defiance/branded-interface#readme",
   "scripts": {
-    "build": "nx build branded-enum",
-    "build:examples": "nx build-examples branded-enum",
-    "test": "nx test branded-enum",
-    "lint": "nx lint branded-enum",
+    "build": "npx nx build branded-interface",
+    "test": "npx nx test branded-interface",
+    "lint": "npx nx lint branded-interface",
     "publish:public": "yarn build && npm publish --access public"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@nx/eslint": "^22.5.1",
     "@nx/jest": "22.4.2",
     "@nx/js": "22.4.2",
     "@swc-node/register": "~1.9.1",
@@ -53,6 +54,7 @@
     "@swc/jest": "~0.2.38",
     "@types/jest": "^30.0.0",
     "@types/node": "20.19.9",
+    "eslint": "^9.0.0",
     "fast-check": "^4.5.3",
     "jest": "^30.0.2",
     "jest-environment-node": "^30.0.2",
@@ -62,11 +64,12 @@
     "ts-jest": "^29.4.0",
     "ts-node": "10.9.1",
     "tslib": "^2.3.0",
-    "typescript": "~5.9.2"
+    "typescript": "~5.9.2",
+    "typescript-eslint": "^8.56.0"
   },
   "packageManager": "yarn@4.12.0",
   "nx": {
-    "name": "branded-enum",
+    "name": "branded-interface",
     "sourceRoot": "src",
     "targets": {
       "build": {
@@ -95,17 +98,13 @@
           "passWithNoTests": true
         }
       },
-      "build-examples": {
-        "executor": "nx:run-commands",
-        "outputs": [
-          "{projectRoot}/examples/dist"
-        ],
+      "lint": {
+        "executor": "@nx/eslint:lint",
         "options": {
-          "command": "tsc -p examples/tsconfig.json"
-        },
-        "dependsOn": [
-          "build"
-        ]
+          "lintFilePatterns": [
+            "src/**/*.ts"
+          ]
+        }
       },
       "publish-public": {
         "executor": "nx:run-commands",

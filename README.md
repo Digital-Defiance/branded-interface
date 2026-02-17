@@ -1,12 +1,12 @@
-# @digitaldefiance/branded-enum
+# @digitaldefiance/branded-interface
 
 Runtime-identifiable enum-like types for TypeScript with zero runtime overhead.
 
-## Why branded-enum?
+## Why branded-interface?
 
 Standard TypeScript enums are erased at compile time, making it impossible to determine which enum a string value originated from at runtime. This becomes problematic in large codebases with multiple libraries that may have overlapping string values.
 
-**branded-enum** solves this by:
+**branded-interface** solves this by:
 
 - Creating enum-like objects with embedded metadata for runtime identification
 - Providing type guards to check if a value belongs to a specific enum
@@ -16,17 +16,17 @@ Standard TypeScript enums are erased at compile time, making it impossible to de
 ## Installation
 
 ```bash
-npm install @digitaldefiance/branded-enum
+npm install @digitaldefiance/branded-interface
 # or
-yarn add @digitaldefiance/branded-enum
+yarn add @digitaldefiance/branded-interface
 # or
-pnpm add @digitaldefiance/branded-enum
+pnpm add @digitaldefiance/branded-interface
 ```
 
 ## Quick Start
 
 ```typescript
-import { createBrandedEnum, isFromEnum, getEnumId } from '@digitaldefiance/branded-enum';
+import { createBrandedEnum, isFromEnum, getEnumId } from '@digitaldefiance/branded-interface';
 
 // Create a branded enum (use `as const` for literal type inference)
 const Status = createBrandedEnum('status', {
@@ -57,7 +57,7 @@ console.log(getEnumId(Status)); // 'status'
 Unlike standard TypeScript enums, branded enums carry metadata that enables runtime identification:
 
 ```typescript
-import { createBrandedEnum, findEnumSources, getEnumById } from '@digitaldefiance/branded-enum';
+import { createBrandedEnum, findEnumSources, getEnumById } from '@digitaldefiance/branded-interface';
 
 const Colors = createBrandedEnum('colors', { Red: 'red', Blue: 'blue' } as const);
 const Sizes = createBrandedEnum('sizes', { Small: 'small', Large: 'large' } as const);
@@ -75,7 +75,7 @@ console.log(retrieved === Colors); // true
 Validate values at runtime with automatic TypeScript type narrowing:
 
 ```typescript
-import { createBrandedEnum, isFromEnum, assertFromEnum } from '@digitaldefiance/branded-enum';
+import { createBrandedEnum, isFromEnum, assertFromEnum } from '@digitaldefiance/branded-interface';
 
 const Priority = createBrandedEnum('priority', {
   High: 'high',
@@ -112,7 +112,7 @@ Object.values(Status);  // ['active']
 The global registry uses `globalThis`, ensuring all branded enums are tracked across different bundles, ESM/CJS modules, and even different instances of the library:
 
 ```typescript
-import { getAllEnumIds, getEnumById } from '@digitaldefiance/branded-enum';
+import { getAllEnumIds, getEnumById } from '@digitaldefiance/branded-interface';
 
 // List all registered enums
 getAllEnumIds(); // ['status', 'colors', 'sizes', ...]
@@ -126,7 +126,7 @@ const enum = getEnumById('status');
 Merge multiple enums into a new combined enum:
 
 ```typescript
-import { createBrandedEnum, mergeEnums } from '@digitaldefiance/branded-enum';
+import { createBrandedEnum, mergeEnums } from '@digitaldefiance/branded-interface';
 
 const HttpSuccess = createBrandedEnum('http-success', {
   OK: '200',
@@ -256,7 +256,7 @@ function resetRegistry(): void
 **Example (Jest/Vitest):**
 
 ```typescript
-import { resetRegistry } from '@digitaldefiance/branded-enum';
+import { resetRegistry } from '@digitaldefiance/branded-interface';
 
 beforeEach(() => {
   resetRegistry();
@@ -424,7 +424,7 @@ Runtime validation decorators for class properties that enforce enum membership.
 #### `@EnumValue` - Property Validation
 
 ```typescript
-import { createBrandedEnum, EnumValue } from '@digitaldefiance/branded-enum';
+import { createBrandedEnum, EnumValue } from '@digitaldefiance/branded-interface';
 
 const Status = createBrandedEnum('status', {
   Active: 'active',
@@ -453,7 +453,7 @@ class Config {
 #### `@EnumClass` - Usage Tracking
 
 ```typescript
-import { createBrandedEnum, EnumClass, getEnumConsumers, getConsumedEnums } from '@digitaldefiance/branded-enum';
+import { createBrandedEnum, EnumClass, getEnumConsumers, getConsumedEnums } from '@digitaldefiance/branded-interface';
 
 const Status = createBrandedEnum('status', { Active: 'active' } as const);
 const Priority = createBrandedEnum('priority', { High: 'high' } as const);
@@ -476,7 +476,7 @@ Create new enums from existing ones.
 #### `enumSubset` - Select Keys
 
 ```typescript
-import { createBrandedEnum, enumSubset } from '@digitaldefiance/branded-enum';
+import { createBrandedEnum, enumSubset } from '@digitaldefiance/branded-interface';
 
 const AllColors = createBrandedEnum('all-colors', {
   Red: 'red', Green: 'green', Blue: 'blue', Yellow: 'yellow',
@@ -489,7 +489,7 @@ const PrimaryColors = enumSubset('primary-colors', AllColors, ['Red', 'Blue', 'Y
 #### `enumExclude` - Remove Keys
 
 ```typescript
-import { createBrandedEnum, enumExclude } from '@digitaldefiance/branded-enum';
+import { createBrandedEnum, enumExclude } from '@digitaldefiance/branded-interface';
 
 const Status = createBrandedEnum('status', {
   Active: 'active', Inactive: 'inactive', Deprecated: 'deprecated',
@@ -502,7 +502,7 @@ const CurrentStatuses = enumExclude('current-statuses', Status, ['Deprecated']);
 #### `enumMap` - Transform Values
 
 ```typescript
-import { createBrandedEnum, enumMap } from '@digitaldefiance/branded-enum';
+import { createBrandedEnum, enumMap } from '@digitaldefiance/branded-interface';
 
 const Status = createBrandedEnum('status', {
   Active: 'active', Inactive: 'inactive',
@@ -519,7 +519,7 @@ const VerboseStatus = enumMap('verbose-status', Status, (value, key) => `${key}:
 #### `enumFromKeys` - Keys as Values
 
 ```typescript
-import { enumFromKeys } from '@digitaldefiance/branded-enum';
+import { enumFromKeys } from '@digitaldefiance/branded-interface';
 
 const Directions = enumFromKeys('directions', ['North', 'South', 'East', 'West'] as const);
 // Equivalent to: { North: 'North', South: 'South', East: 'East', West: 'West' }
@@ -532,7 +532,7 @@ Compare and analyze enums.
 #### `enumDiff` - Compare Enums
 
 ```typescript
-import { createBrandedEnum, enumDiff } from '@digitaldefiance/branded-enum';
+import { createBrandedEnum, enumDiff } from '@digitaldefiance/branded-interface';
 
 const StatusV1 = createBrandedEnum('status-v1', {
   Active: 'active', Inactive: 'inactive',
@@ -552,7 +552,7 @@ const diff = enumDiff(StatusV1, StatusV2);
 #### `enumIntersect` - Find Shared Values
 
 ```typescript
-import { createBrandedEnum, enumIntersect } from '@digitaldefiance/branded-enum';
+import { createBrandedEnum, enumIntersect } from '@digitaldefiance/branded-interface';
 
 const PrimaryColors = createBrandedEnum('primary', { Red: 'red', Blue: 'blue' } as const);
 const WarmColors = createBrandedEnum('warm', { Red: 'red', Orange: 'orange' } as const);
@@ -568,7 +568,7 @@ Parse values without throwing errors.
 #### `parseEnum` - With Default
 
 ```typescript
-import { createBrandedEnum, parseEnum } from '@digitaldefiance/branded-enum';
+import { createBrandedEnum, parseEnum } from '@digitaldefiance/branded-interface';
 
 const Status = createBrandedEnum('status', { Active: 'active', Inactive: 'inactive' } as const);
 
@@ -579,7 +579,7 @@ const status = parseEnum(userInput, Status, Status.Active);
 #### `safeParseEnum` - Result Object
 
 ```typescript
-import { createBrandedEnum, safeParseEnum } from '@digitaldefiance/branded-enum';
+import { createBrandedEnum, safeParseEnum } from '@digitaldefiance/branded-interface';
 
 const Status = createBrandedEnum('status', { Active: 'active', Inactive: 'inactive' } as const);
 
@@ -599,7 +599,7 @@ Ensure all enum cases are handled in switch statements.
 #### `exhaustive` - Generic Helper
 
 ```typescript
-import { createBrandedEnum, exhaustive } from '@digitaldefiance/branded-enum';
+import { createBrandedEnum, exhaustive } from '@digitaldefiance/branded-interface';
 
 const Status = createBrandedEnum('status', {
   Active: 'active', Inactive: 'inactive', Pending: 'pending',
@@ -620,7 +620,7 @@ function handleStatus(status: StatusValue): string {
 #### `exhaustiveGuard` - Enum-Specific Guard
 
 ```typescript
-import { createBrandedEnum, exhaustiveGuard } from '@digitaldefiance/branded-enum';
+import { createBrandedEnum, exhaustiveGuard } from '@digitaldefiance/branded-interface';
 
 const Status = createBrandedEnum('status', { Active: 'active', Inactive: 'inactive' } as const);
 const assertStatusExhaustive = exhaustiveGuard(Status);
@@ -642,7 +642,7 @@ Generate schemas for validation libraries.
 #### `toJsonSchema` - JSON Schema
 
 ```typescript
-import { createBrandedEnum, toJsonSchema } from '@digitaldefiance/branded-enum';
+import { createBrandedEnum, toJsonSchema } from '@digitaldefiance/branded-interface';
 
 const Status = createBrandedEnum('status', {
   Active: 'active', Inactive: 'inactive',
@@ -668,7 +668,7 @@ const customSchema = toJsonSchema(Status, {
 #### `toZodSchema` - Zod-Compatible Definition
 
 ```typescript
-import { createBrandedEnum, toZodSchema } from '@digitaldefiance/branded-enum';
+import { createBrandedEnum, toZodSchema } from '@digitaldefiance/branded-interface';
 import { z } from 'zod';
 
 const Status = createBrandedEnum('status', {
@@ -689,7 +689,7 @@ Custom serialization/deserialization with transforms.
 #### `enumSerializer` - Serializer Factory
 
 ```typescript
-import { createBrandedEnum, enumSerializer } from '@digitaldefiance/branded-enum';
+import { createBrandedEnum, enumSerializer } from '@digitaldefiance/branded-interface';
 
 const Status = createBrandedEnum('status', {
   Active: 'active', Inactive: 'inactive',
@@ -717,7 +717,7 @@ Debug and monitor enum usage.
 #### `watchEnum` - Access Monitoring
 
 ```typescript
-import { createBrandedEnum, watchEnum } from '@digitaldefiance/branded-enum';
+import { createBrandedEnum, watchEnum } from '@digitaldefiance/branded-interface';
 
 const Status = createBrandedEnum('status', { Active: 'active', Inactive: 'inactive' } as const);
 
@@ -734,7 +734,7 @@ unwatch(); // Stop watching
 #### `enumToRecord` - Strip Metadata
 
 ```typescript
-import { createBrandedEnum, enumToRecord } from '@digitaldefiance/branded-enum';
+import { createBrandedEnum, enumToRecord } from '@digitaldefiance/branded-interface';
 
 const Status = createBrandedEnum('status', { Active: 'active' } as const);
 const plain = enumToRecord(Status);
@@ -746,7 +746,7 @@ const plain = enumToRecord(Status);
 TypeScript utility types for enhanced type safety.
 
 ```typescript
-import { createBrandedEnum, EnumKeys, EnumValues, ValidEnumValue, StrictEnumParam } from '@digitaldefiance/branded-enum';
+import { createBrandedEnum, EnumKeys, EnumValues, ValidEnumValue, StrictEnumParam } from '@digitaldefiance/branded-interface';
 
 const Status = createBrandedEnum('status', {
   Active: 'active', Inactive: 'inactive',

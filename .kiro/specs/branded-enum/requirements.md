@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The branded-enum library provides runtime-identifiable enum-like types for TypeScript. Standard TypeScript enums are erased at runtime, making it impossible to determine which enum a string value originated from. This is problematic in large codebases with multiple libraries that may have overlapping string values for i18n keys or other purposes.
+The branded-interface library provides runtime-identifiable enum-like types for TypeScript. Standard TypeScript enums are erased at runtime, making it impossible to determine which enum a string value originated from. This is problematic in large codebases with multiple libraries that may have overlapping string values for i18n keys or other purposes.
 
 The library enables:
 - Creating enum-like objects with embedded metadata for runtime identification
