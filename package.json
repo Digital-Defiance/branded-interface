@@ -1,6 +1,6 @@
 {
   "name": "@digitaldefiance/branded-interface",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Runtime-identifiable interface-like types for TypeScript with zero runtime overhead",
   "license": "MIT",
   "type": "module",
@@ -43,6 +43,9 @@
     "lint": "npx nx lint branded-interface",
     "publish:public": "yarn build && npm publish --access public"
   },
+  "dependencies": {
+    "@swc/helpers": "~0.5.11"
+  },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@nx/eslint": "^22.5.1",
@@ -51,7 +54,6 @@
     "@swc-node/register": "~1.9.1",
     "@swc/cli": "~0.6.0",
     "@swc/core": "~1.5.7",
-    "@swc/helpers": "~0.5.11",
     "@swc/jest": "~0.2.38",
     "@types/jest": "^30.0.0",
     "@types/node": "20.19.9",
